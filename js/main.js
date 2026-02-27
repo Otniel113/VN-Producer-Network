@@ -186,8 +186,8 @@ function setupGUI(config) {
     $GP.info_close = $GP.info.find(".returntext");
     $GP.info_close2 = $GP.info.find(".close");
     $GP.info_p = $GP.info.find(".p");
-    $GP.info_close.click(nodeNormal);
-    $GP.info_close2.click(nodeNormal);
+    $GP.info_close.on("click touchstart", nodeNormal);
+    $GP.info_close2.on("click touchstart", nodeNormal);
     $GP.form = $("#mainpanel").find("form");
     $GP.search = new Search($GP.form.find("#search"));
     if (!config.features.search) {
@@ -289,7 +289,7 @@ function configSigmaElements(config) {
     $("#zoom").find("div.z").each(function () {
         var a = $(this),
             b = a.attr("rel");
-        a.click(function () {
+        a.on("click touchstart", function () {
 			if (b == "center") {
 				sigInst.position(0,0,1).draw();
 			} else {
@@ -299,17 +299,17 @@ function configSigmaElements(config) {
 
         })
     });
-    $GP.mini.click(function () {
+    $GP.mini.on("click touchstart", function () {
         $GP.mini.hide();
         $GP.intro.show();
         $GP.minifier.show()
     });
-    $GP.minifier.click(function () {
+    $GP.minifier.on("click touchstart", function () {
         $GP.intro.hide();
         $GP.minifier.hide();
         $GP.mini.show()
     });
-    $GP.intro.find("#showGroups").click(function () {
+    $GP.intro.find("#showGroups").on("click touchstart", function () {
         !0 == $GP.showgroup ? showGroups(!1) : showGroups(!0)
     });
     a = window.location.hash.substr(1);
@@ -343,7 +343,7 @@ function Search(a) {
     this.input.keydown(function (a) {
         if (13 == a.which) return b.state.addClass("searching"), b.search(b.input.val()), !1
     });
-    this.state.click(function () {
+    this.state.on("click touchstart", function () {
         var a = b.input.val();
         b.searching && a == b.lastSearch ? b.close() : (b.state.addClass("searching"), b.search(a))
     });
@@ -379,7 +379,7 @@ function Search(a) {
             });
             c.length ? (b = !0, nodeActive(c[0].id)) : b = showCluster(a);
             a = ["<b>Search Results: </b>"];
-            if (1 < c.length) for (var d = 0, h = c.length; d < h; d++) a.push('<a href="#' + c[d].name + '" onclick="nodeActive(\'' + c[d].id + "')\">" + c[d].name + "</a>");
+            if (1 < c.length) for (var d = 0, h = c.length; d < h; d++) a.push('<a href="#' + c[d].name + '" onmousedown="nodeActive(\'' + c[d].id + "')\" ontouchstart=\"nodeActive('" + c[d].id + "')\">" + c[d].name + "</a>");
             0 == c.length && !b && a.push("<i>No results found.</i>");
             1 < a.length && this.results.html(a.join(""));
            }
@@ -394,7 +394,7 @@ function Cluster(a) {
     this.list = this.cluster.find(".list");
     this.list.empty();
     this.select = this.cluster.find(".select");
-    this.select.click(function () {
+    this.select.on("click touchstart", function () {
         $GP.cluster.toggle()
     });
     this.toggle = function () {
@@ -402,7 +402,7 @@ function Cluster(a) {
     };
     this.content = function (a) {
         this.list.html(a);
-        this.list.find("a").click(function () {
+        this.list.find("a").on("click touchstart", function () {
             var a = $(this).attr("href").substr(1);
             showCluster(a)
         })
@@ -434,7 +434,7 @@ function nodeNormal() {
     }), sigInst.draw(2, 2, 2, 2), sigInst.neighbors = {}, sigInst.active = !1, $GP.calculating = !1, window.location.hash = "")
 }
 
-function nodeActive(a) {
+function nodeActive(a)  {
 
 	var groupByDirection=false;
 	if (config.informationPanel.groupByEdgeDirection && config.informationPanel.groupByEdgeDirection==true)	groupByDirection=true;
@@ -508,7 +508,17 @@ function nodeActive(a) {
 				d = c.group;
 				f.push('<li class="cf" rel="' + c.color + '"><div class=""></div><div class="">' + d + "</div></li>");
 			}*/
-			f.push('<li class="membership"><a href="#' + c.name + '" onmouseover="sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex[\'' + c.id + '\'])\" onclick=\"nodeActive(\'' + c.id + '\')" onmouseout="sigInst.refresh()">' + c.name + "</a></li>");
+			// f.push('<li class="membership"><a href="#' + c.name + '" ontouchstart="nodeActive(\'' + c.id + '\')" onclick="nodeActive(\'' + c.id + '\')" onmouseout="sigInst.refresh()">' + c.name + '</a></li>');
+            f.push(`
+                <li class="membership">
+                    <a href="#${c.name}" 
+                    ontouchstart="nodeActive('${c.id}')" 
+                    onclick="nodeActive('${c.id}')" 
+                    onmouseout="sigInst.refresh()">
+                    ${c.name}
+                    </a>
+                </li>
+            `);
 		}
 		return f;
 	}
@@ -572,9 +582,9 @@ function nodeActive(a) {
 
         if (image_attribute) {
         	//image_index = jQuery.inArray(image_attribute, temp_array);
-        	$GP.info_name.html("<div><img src=" + f.attributes[image_attribute] + " style=\"vertical-align:middle\" /> <span onmouseover=\"sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])" onmouseout="sigInst.refresh()">' + b.label + "</span></div>");
+        	$GP.info_name.html("<div><img src=" + f.attributes[image_attribute] + " style=\"vertical-align:middle\" /> <span  onmouseover=\"sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])" onmouseout="sigInst.refresh()">' + b.label + "</span></div>");
         } else {
-        	$GP.info_name.html("<div><span onmouseover=\"sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])" onmouseout="sigInst.refresh()">' + b.label + "</span></div>");
+        	$GP.info_name.html("<div><span  onmouseover=\"sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])" onmouseout="sigInst.refresh()">' + b.label + "</span></div>");
         }
         // Image field for attribute pane
         $GP.info_data.html(e.join("<br/>"))
@@ -602,9 +612,33 @@ function showCluster(a) {
         sigInst.iterNodes(function (a) {
             a.hidden = !0
         });
-        for (var f = [], e = [], c = 0, g = b.length; c < g; c++) {
-            var d = sigInst._core.graph.nodesIndex[b[c]];
-            !0 == d.hidden && (e.push(b[c]), d.hidden = !1, d.attr.lineWidth = !1, d.attr.color = d.color, f.push('<li class="membership"><a href="#'+d.label+'" onmouseover="sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex[\'' + d.id + "'])\" onclick=\"nodeActive('" + d.id + '\')" onmouseout="sigInst.refresh()">' + d.label + "</a></li>"))
+        // for (var f = [], e = [], c = 0, g = b.length; c < g; c++) {
+        //     var d = sigInst._core.graph.nodesIndex[b[c]];
+        //     !0 == d.hidden && (e.push(b[c]), d.hidden = !1, d.attr.lineWidth = !1, d.attr.color = d.color, f.push('<li class="membership"><a href="#' + d.label + '" ontouchstart="nodeActive(\'' + d.id + '\')" onclick="nodeActive(\'' + d.id + '\')" onmouseout="sigInst.refresh()">' + d.label + '</a></li>'))
+        // }
+        for (let id of b) {
+            const node = sigInst._core.graph.nodesIndex[id];
+
+            // If the node is hidden, unhide it and update attributes
+            if (node.hidden === true) {
+                e.push(id);
+                
+                node.hidden = false;
+                node.attr.lineWidth = false;
+                node.attr.color = node.color;
+
+                // Build the list item using backticks (Template Literals)
+                f.push(`
+                <li class="membership">
+                    <a href="#${node.label}" 
+                    ontouchstart="nodeActive('${node.id}')" 
+                    onclick="nodeActive('${node.id}')" 
+                    onmouseout="sigInst.refresh()">
+                    ${node.label}
+                    </a>
+                </li>
+                `);
+            }
         }
         sigInst.clusters[a] = e;
         sigInst.draw(2, 2, 2, 2);

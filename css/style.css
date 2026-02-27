@@ -138,7 +138,7 @@ float: left;
 #attributepane .name {
 font-size: 14px;
 cursor: default;
-padding-bottom: 10px;
+padding-top: 10px;
 padding-top: 18px;
 font-weight:bold;
 }
@@ -575,3 +575,64 @@ cursor: pointer;
 display: none;
 }
 
+
+/* Mobile Friendly Styles */
+@media screen and (max-width: 768px) {
+    #mainpanel {
+        margin-top: 10px;
+        margin-left: 10px;
+        width: calc(100% - 20px);
+        max-height: 35vh;
+        overflow-y: auto;
+        position: absolute;
+        box-sizing: border-box;
+    }
+    #mainpanel .col {
+        width: auto;
+        padding: 10px;
+    }
+    #attributepane {
+        width: calc(100% - 20px);
+        height: 40vh;
+        top: auto;
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        box-sizing: border-box;
+        position: absolute;
+    }
+    #zoom {
+        left: auto;
+        right: 10px;
+        top: auto;
+        bottom: 45vh;
+        width: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    #zoom .z {
+        width: 40px;
+        height: 40px;
+        background-size: 20px;
+        margin-bottom: 5px;
+        margin-right: 0;
+        float: none;
+    }
+    #attributeselect .list {
+        margin-left: 0;
+        margin-top: 0;
+        position: relative;
+        width: auto;
+    }
+    #search input[name=search] {
+        width: calc(100% - 30px);
+    }
+    #copyright {
+        display: none;
+    }
+    #developercontainer {
+        display: none;
+    }
+}
